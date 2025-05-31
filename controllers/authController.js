@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
@@ -55,26 +57,29 @@ exports.updateProfile = async (req, res) => {
 
 exports.deleteProfilePic = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
 
     if (!user.profilePic) {
-      return res.status(400).json({ message: 'No profile picture to delete' });
+      return res.status(400).json({ message: "User belum memiliki foto profil" });
     }
 
-    const filePath = path.join(__dirname, '..', user.profilePic);
+    // Ambil nama file dari "uploads/filename.jpg"
+    const filename = path.basename(user.profilePic);
+    const filePath = path.join(__dirname, '..', 'uploads', filename);
 
-    // Hapus file di sistem
-    fs.unlink(filePath, async (err) => {
-      if (err && err.code !== 'ENOENT') {
-        return res.status(500).json({ message: 'Failed to delete file' });
-      }
+    // Cek dan hapus file jika ada
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
 
-      user.profilePic = '';
-      await user.save();
+    // Hapus dari database
+    user.profilePic = null;
+    await user.save();
 
-      res.json({ message: 'Profile picture deleted' });
-    });
+    res.status(200).json({ message: "Foto profil berhasil dihapus" });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete profile picture' });
+    res.status(500).json({ message: "Gagal menghapus foto", error: err.message });
   }
 };

@@ -5,19 +5,17 @@ exports.createPrediction = async (req, res) => {
     const userId = req.user.id; // ini dari middleware auth JWT
     const user = await User.findById(userId);
 
-    const { kategori, formData, status } = req.body;
+    const { kategori, status } = req.body;
 
     const prediction = new Prediction({
       userId,
-      nama: user.nama,
       email: user.email,
       kategori,
-      formData,
       status,
     });
 
     await prediction.save();
-    res.status(201).json({ message: 'Prediction saved', data: newPrediction });
+    res.status(201).json({ message: 'Prediction saved', data: prediction });
   } catch (err) {
     res.status(500).json({ message: 'Failed to save prediction', error: err.message });
   }
