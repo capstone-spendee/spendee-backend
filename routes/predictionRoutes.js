@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createPrediction, getUserPredictions } = require('../controllers/predictionController');
 const auth = require('../middleware/authMiddleware');
+const { createPrediction, getUserPredictions } = require('../controllers/predictionController');
 
-router.post('/predictions', auth, createPrediction);
-router.get('/predictions/history', auth, getUserPredictions);
+router.post('/simpan', auth, createPrediction);
+router.get('/history', auth, getUserPredictions);
 
 module.exports = router;

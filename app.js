@@ -12,7 +12,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/user', require('./routes/authRoutes'));
 app.use('/uploads', express.static('uploads')); // untuk mengakses file upload
-app.use('/api/predictions', require('./routes/predictionRoutes'));
+app.use('/api/prediction', require('./routes/predictionRoutes'));
 
 
 const PORT = process.env.PORT || 3000;
