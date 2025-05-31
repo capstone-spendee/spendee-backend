@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   if (!token) return res.sendStatus(401);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = { id: decoded.id, email: decoded.email };
     next();
   } catch {
     res.sendStatus(403);
