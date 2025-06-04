@@ -1,4 +1,5 @@
 const Prediction = require('../models/Prediction');
+const User = require('../models/User');
 
 exports.createPrediction = async (req, res) => {
   try {
