@@ -24,7 +24,9 @@ exports.createPrediction = async (req, res) => {
 
 exports.getUserPredictions = async (req, res) => {
   try {
-    const predictions = await Prediction.find({ userId: req.user.id }).sort({ createdAt: -1 });
+
+    const userId = req.user.id; // ini dari middleware auth JWT
+    const predictions = await Prediction.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(predictions);
   } catch (err) {
     res.status(500).json({ message: 'Failed to get predictions', error: err.message });
